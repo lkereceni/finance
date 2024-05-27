@@ -1,10 +1,8 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
-import { z } from "zod";
-import { zValidator } from "@hono/zod-validator";
-import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 
 import accounts from "./accounts";
+import categories from "./categories";
 import { HTTPException } from "hono/http-exception";
 
 export const runtime = "edge";
@@ -19,7 +17,9 @@ app.onError((error, c) => {
   return c.json({ error: "Internal error" }, 500);
 });
 
-const routes = app.route("/accounts", accounts);
+const routes = app
+  .route("/accounts", accounts)
+  .route("/categories", categories);
 
 export const GET = handle(app);
 export const POST = handle(app);
