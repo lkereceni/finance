@@ -5,34 +5,33 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { AccountForm } from "./account-form";
-import { insertAccountSchema } from "@/db/schema";
+import { insertTransactionSchema } from "@/db/schema";
 import { z } from "zod";
 import { useOpenAccount } from "../hooks/use-open-account";
 import { useGetTransaction } from "../api/use-get-transaction";
 import { Loader2 } from "lucide-react";
 import { useEditTransaction } from "../api/use-edit-transaction";
-import { useDeleteAccount } from "../api/use-delete-transaction";
 import { useConfirm } from "@/hooks/use-confirm";
+import { useDeleteTransaction } from "../api/use-delete-transaction";
 
-const formSchema = insertAccountSchema.pick({ name: true });
+const formSchema = insertTransactionSchema.omit({ id: true });
 
 type FormValues = z.input<typeof formSchema>;
 
-export const EditAccountSheet = () => {
+export const EditTransactionSheet = () => {
   const { isOpen, onClose, id } = useOpenAccount();
 
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure?",
-    "You are about to delete this account"
+    "You are about to delete this transaction"
   );
 
-  const accountQuery = useGetTransaction(id);
+  const transactionQuery = useGetTransaction(id);
   const editMutation = useEditTransaction(id);
-  const deleteMutation = useDeleteAccount(id);
+  const deleteMutation = useDeleteTransaction(id);
 
   const isPending = editMutation.isPending || deleteMutation.isPending;
-  const isLoading = accountQuery.isLoading;
+  const isLoading = transactionQuery.isLoading;
 
   const onSubmit = (values: FormValues) => {
     editMutation.mutate(values);
@@ -50,9 +49,9 @@ export const EditAccountSheet = () => {
     }
   };
 
-  const defaultValues = accountQuery.data
+  const defaultValues = transactionQuery.data
     ? {
-        name: accountQuery.data.name,
+        name: transactionQuery.data.payee,
       }
     : {
         name: "",
@@ -72,13 +71,7 @@ export const EditAccountSheet = () => {
               <Loader2 className="size-4 text-muted-foreground animate-spin" />
             </div>
           ) : (
-            <AccountForm
-              id={id}
-              onSubmit={onSubmit}
-              disabled={isPending}
-              defaultValues={defaultValues}
-              onDelete={onDelete}
-            />
+            <p>TODO: EditTransactionForm</p>
           )}
         </SheetContent>
       </Sheet>
