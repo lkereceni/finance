@@ -237,6 +237,8 @@ const app = new Hono()
           .where(and(eq(transactions.id, id), eq(accounts.userId, auth.userId)))
       );
 
+      console.log(transactionsToUpdate);
+
       const [data] = await db
         .with(transactionsToUpdate)
         .update(transactions)
@@ -291,7 +293,7 @@ const app = new Hono()
         .where(
           inArray(
             transactions.id,
-            sql`(select if from ${transactionsToDelete})`
+            sql`(select id from ${transactionsToDelete})`
           )
         )
         .returning({ id: transactions.id });

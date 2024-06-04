@@ -16,7 +16,7 @@ const TransactionsPage = () => {
   const newTransaction = useNewTransaction();
   const deleteTransactions = useBulkDeleteTransactions();
   const transactionsQuery = useGetTransactions();
-  const transactions = transactionsQuery.data | [];
+  const transactions = transactionsQuery.data || [];
 
   const isDisabled =
     transactionsQuery.isLoading || deleteTransactions.isPending;
@@ -54,7 +54,7 @@ const TransactionsPage = () => {
           <DataTable
             columns={columns}
             data={transactions}
-            filterKey="name"
+            filterKey="payee"
             onDelete={(row) => {
               const ids = row.map((r) => r.original.id);
               deleteTransactions.mutate({ ids });
